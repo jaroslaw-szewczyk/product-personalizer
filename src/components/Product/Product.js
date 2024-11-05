@@ -6,8 +6,8 @@ import PropTypes from 'prop-types';
 
 const Product = props => {
 
-  // console.log(props);
   const [color, setColor] = useState('');
+
   const getCurrentColor = (myColor) => {
     setColor(myColor);
   }

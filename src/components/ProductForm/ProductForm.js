@@ -1,8 +1,11 @@
 import { useEffect, useState } from 'react';
-import clsx from 'clsx';
+
 import { v4 as uuidv4 } from 'uuid';
 import styles from './ProductForm.module.scss';
 import Button from '../Button/Button';
+import OptionSize from '../OptionSize/OptionSize';
+import OptionColor from '../OptionColor/OptionColor';
+
 
 const ProductForm = ({productInfo, newColor}) => {
   // console.log(props.productInfo)
@@ -14,7 +17,7 @@ const ProductForm = ({productInfo, newColor}) => {
 
   const getPrice = () => {
     let finalPrice = productInfo.basePrice;
-    const mySize = productInfo.sizes.find( size => size.name === 'S'); // nie zapomnieć zmienić na 'S' 
+    const mySize = productInfo.sizes.find( size => size.name === currentSize); // nie zapomnieć zmienić na 'S' 
     return finalPrice +  mySize.additionalPrice;
   };
 
@@ -27,12 +30,12 @@ const ProductForm = ({productInfo, newColor}) => {
   })
   
 
-  // const productData = {
-  //   name: props.title,
-  //   price: getPrice(),
-  //   size: currentSize,
-  //   color: currentColor
-  // }
+  const productData = {
+    name: productInfo.title,
+    price: getPrice(),
+    size: currentSize,
+    color: currentColor
+  }
 
   return (
     <div>
@@ -41,29 +44,11 @@ const ProductForm = ({productInfo, newColor}) => {
           <span className={styles.price}>Price: {getPrice()}$</span>
         </header>
         <form>
-          <div className={styles.sizes}>
-            <h3 className={styles.optionLabel}>Sizes</h3>
-            <ul className={styles.choices}>
-              {productInfo.sizes.map(size => 
-                <li key={uuidv4()}>
-                  <button type="button" className={clsx(size.name === currentSize && styles.active)}>
-                    {size.name}
-                  </button>
-                </li>)}
-            </ul>
-          </div>
-          <div className={styles.colors}>
-            <h3 className={styles.optionLabel}>Colors</h3>
-            <ul className={styles.choices}>
-              {productInfo.colors.map(color => 
-                <li key={uuidv4()}>
-                  <button  type="button" className={clsx(prepareColorClassName(color), color === currentColor && styles.active)} />
-                </li>)}
-            </ul>
-          </div>
-          {/* <Button className={styles.button} productInfo={productData}>
+          <OptionSize />
+          <OptionColor />
+          <Button className={styles.button} productInfo={productData}>
             <span className="fa fa-shopping-cart" />
-          </Button> */}
+          </Button>
         </form>
       </div>
   );
