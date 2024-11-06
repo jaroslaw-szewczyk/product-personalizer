@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 import styles from './ProductForm.module.scss';
 import Button from '../Button/Button';
@@ -12,11 +12,11 @@ const ProductForm = ({productInfo, newColor}) => {
   const [currentColor, setCurrentColor] = useState(productInfo.colors[0]);
   const [currentSize, setCurrentSize] = useState(productInfo.sizes[0].name);
 
-  const getPrice = () => {
+  const getPrice = useMemo(() => {
     let finalPrice = productInfo.basePrice;
     const mySize = productInfo.sizes.find( size => size.name === currentSize); 
     return finalPrice +  mySize.additionalPrice;
-  };
+  });
 
   const getCurrentSize = (newSize) => {
     setCurrentSize(newSize);
@@ -32,7 +32,7 @@ const ProductForm = ({productInfo, newColor}) => {
 
   const productData = {
     name: productInfo.title,
-    price: getPrice(),
+    price: getPrice,
     size: currentSize,
     color: currentColor
   }
@@ -41,7 +41,7 @@ const ProductForm = ({productInfo, newColor}) => {
     <div>
         <header>
           <h2 className={styles.name}>{productInfo.title}</h2>
-          <span className={styles.price}>Price: {getPrice()}$</span>
+          <span className={styles.price}>Price: {getPrice}$</span>
         </header>
         <form>
           <OptionSize sizes={productInfo.sizes} currentSize={currentSize} getCurrentSize={getCurrentSize}/>
