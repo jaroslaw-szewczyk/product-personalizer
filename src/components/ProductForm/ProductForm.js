@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 
-import { v4 as uuidv4 } from 'uuid';
 import styles from './ProductForm.module.scss';
 import Button from '../Button/Button';
 import OptionSize from '../OptionSize/OptionSize';
@@ -8,27 +7,28 @@ import OptionColor from '../OptionColor/OptionColor';
 
 
 const ProductForm = ({productInfo, newColor}) => {
-  // console.log(props.productInfo)
-  // console.log('sizes: ',props.sizes);
-  // console.log('colors',props.color);
+
 
   const [currentColor, setCurrentColor] = useState(productInfo.colors[0]);
   const [currentSize, setCurrentSize] = useState(productInfo.sizes[0].name);
 
   const getPrice = () => {
     let finalPrice = productInfo.basePrice;
-    const mySize = productInfo.sizes.find( size => size.name === currentSize); // nie zapomnieć zmienić na 'S' 
+    const mySize = productInfo.sizes.find( size => size.name === currentSize); 
     return finalPrice +  mySize.additionalPrice;
   };
 
-  const prepareColorClassName = color => {
-    return styles['color' + color[0].toUpperCase() + color.slice(1)];
-  };
+  const getCurrentSize = (newSize) => {
+    setCurrentSize(newSize);
+  }
+
+  const getCurrentColor = (newColor) => {
+    setCurrentColor(newColor);
+  }
 
   useEffect(() => {
     newColor(currentColor);
-  })
-  
+  },[currentColor])
 
   const productData = {
     name: productInfo.title,
@@ -44,9 +44,9 @@ const ProductForm = ({productInfo, newColor}) => {
           <span className={styles.price}>Price: {getPrice()}$</span>
         </header>
         <form>
-          <OptionSize />
-          <OptionColor />
-          <Button className={styles.button} productInfo={productData}>
+          <OptionSize sizes={productInfo.sizes} currentSize={currentSize} getCurrentSize={getCurrentSize}/>
+          <OptionColor colors={productInfo.colors} currentColor={currentColor} getCurrentColor={getCurrentColor}/>
+          <Button className={styles.button} productData={productData}>
             <span className="fa fa-shopping-cart" />
           </Button>
         </form>
@@ -55,30 +55,3 @@ const ProductForm = ({productInfo, newColor}) => {
 }
 
 export default ProductForm;
-
-
-/*<form>
-          <div className={styles.sizes}>
-            <h3 className={styles.optionLabel}>Sizes</h3>
-            <ul className={styles.choices}>
-              {productInfo.sizes.map(size => 
-                <li key={uuidv4()}>
-                  <button type="button" className={clsx(size.name === currentSize && styles.active)} onClick={() => setCurrentSize(size.name)}>
-                    {size.name}
-                  </button>
-                </li>)}
-            </ul>
-          </div>
-          <div className={styles.colors}>
-            <h3 className={styles.optionLabel}>Colors</h3>
-            <ul className={styles.choices}>
-              {props.colors.map(color => 
-                <li key={uuidv4()}>
-                  <button  type="button" className={clsx(prepareColorClassName(color), color === currentColor && styles.active)} onClick={() => setCurrentColor(color)}/>
-                </li>)}
-            </ul>
-          </div>
-          <Button className={styles.button} productInfo={productData}>
-            <span className="fa fa-shopping-cart" />
-          </Button>
-        </form> */

@@ -5,7 +5,7 @@ const Button = (props) => {
 
   const addToCart = (event) => {
     event.preventDefault();
-    console.log(props.productInfo);
+    console.log(props.productData);
   };
 
     return (<button className={clsx(styles.button, props.className)} onClick={addToCart}>{props.children}</button>);
